@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>HushMemo Meet — meeting notes that stay on your machine</title>
+<meta name="description" content="A local-first, no-bot meeting-notes tool for Google Meet, Zoom and Teams. Captures your tab audio from your side, keeps everything on your computer, and is open source under MIT." />
+<style>
+  :root {
+    --paper: #F5F6F4;
+    --paper-2: #FBFBFA;
+    --ink: #23262B;
+    --ink-soft: #5A626C;
+    --hair: #E1E4E1;
+    --teal: #2F7D6B;
+    --teal-dark: #26614F;
+    --teal-soft: #E6F0EC;
+    --serif: Georgia, "Times New Roman", ui-serif, serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --maxw: 1080px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: var(--teal-dark); }
+
+  .wrap {
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding: 0 clamp(20px, 5vw, 40px);
+  }
+
+  /* ---- top bar ---- */
+  .top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-block: 22px;
+    border-bottom: 1px solid var(--hair);
+  }
+  .wordmark {
+    font-family: var(--serif);
+    font-size: 1.2rem;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: baseline;
+    gap: .5ch;
+  }
+  .wordmark .sub {
+    font-family: var(--sans);
+    font-size: .72rem;
+    color: var(--ink-soft);
+    letter-spacing: .02em;
+    position: relative;
+    top: -1px;
+  }
+  .top nav a {
+    text-decoration: none;
+    color: var(--ink-soft);
+    font-size: .95rem;
+    margin-left: 1.4rem;
+  }
+  .top nav a:hover { color: var(--ink); }
+
+  /* ---- buttons ---- */
+  .btn {
+    display: inline-block;
+    font: inherit;
+    font-size: .98rem;
+    line-height: 1;
+    padding: .72rem 1.1rem;
+    border-radius: 8px;
+    text-decoration: none;
+    border: 1px solid transparent;
+    transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+  }
+  .btn-primary { background: var(--teal); color: #fff; }
+  .btn-primary:hover { background: var(--teal-dark); }
+  .btn-ghost { color: var(--ink); border-color: var(--hair); }
+  .btn-ghost:hover { border-color: var(--teal); color: var(--teal-dark); }
+
+  /* ---- hero ---- */
+  .hero {
+    display: grid;
+    grid-template-columns: 1.05fr .95fr;
+    gap: clamp(28px, 5vw, 64px);
+    align-items: center;
+    padding-block: clamp(48px, 8vw, 84px);
+  }
+  .hero h1 {
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: clamp(1.9rem, 1.1rem + 2.7vw, 2.85rem);
+    line-height: 1.12;
+    letter-spacing: -0.015em;
+    margin: 0 0 1.1rem;
+    max-width: 15ch;
+  }
+  .hero .lead {
+    color: var(--ink-soft);
+    font-size: 1.06rem;
+    max-width: 54ch;
+    margin: 0 0 1.7rem;
+  }
+  .hero-cta { display: flex; flex-wrap: wrap; gap: .7rem; }
+  .hero-note { margin-top: 1.3rem; font-size: .85rem; color: var(--ink-soft); }
+
+  /* ---- product mock (the loud element) ---- */
+  .panel {
+    background: var(--paper-2);
+    border: 1px solid var(--hair);
+    border-radius: 14px;
+    padding: 18px 18px 20px;
+    box-shadow: 0 1px 0 rgba(35,38,43,.02);
+  }
+  .panel-context {
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: .82rem; color: var(--ink-soft);
+    padding-bottom: 12px; border-bottom: 1px solid var(--hair);
+  }
+  .platform { display: inline-flex; align-items: center; gap: .5ch; }
+  .capture-bar {
+    display: flex; align-items: center; gap: .6ch;
+    padding: 14px 0 4px; font-size: .9rem; color: var(--ink);
+  }
+  .capture-bar .elapsed { margin-left: auto; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+  .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--teal); flex: none;
+  }
+  .dot.small { width: 6px; height: 6px; opacity: .6; }
+  .dot.live { animation: breathe 3s ease-in-out infinite; }
+  @keyframes breathe {
+    0%, 100% { opacity: .5; transform: scale(.85); }
+    50%      { opacity: 1;  transform: scale(1.25); }
+  }
+  .feed { margin-top: 12px; border-top: 1px solid var(--hair); padding-top: 12px; }
+  .seg { font-size: .86rem; color: var(--ink-soft); margin: 0 0 .55rem; }
+  .seg .t { color: var(--teal-dark); font-variant-numeric: tabular-nums; margin-right: .5ch; }
+  .jot {
+    display: flex; gap: .6ch; align-items: baseline;
+    font-size: .9rem; color: var(--ink);
+    margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--hair);
+  }
+  .chip {
+    flex: none; background: var(--teal-soft); color: var(--teal-dark);
+    border-radius: 5px; padding: 1px 6px; font-size: .74rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ---- section frame ---- */
+  section { border-top: 1px solid var(--hair); }
+  .section-pad { padding-block: clamp(46px, 7vw, 76px); }
+  h2 {
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 1.4rem;
+    letter-spacing: -0.01em;
+    margin: 0 0 .5rem;
+  }
+  .section-intro { color: var(--ink-soft); max-width: 60ch; margin: 0 0 2.4rem; }
+
+  /* ---- pillars ---- */
+  .pillars { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; }
+  .pillar { padding: 0 1.4rem; }
+  .pillar:first-child { padding-left: 0; }
+  .pillar:last-child { padding-right: 0; }
+  .pillar + .pillar { border-left: 1px solid var(--hair); }
+  .pillar h3 {
+    font-size: 1.02rem; font-weight: 600; margin: 0 0 .5rem;
+    display: flex; align-items: center; gap: .55ch;
+  }
+  .pillar h3 .dot { position: relative; top: 0; }
+  .pillar p { margin: 0; color: var(--ink-soft); font-size: .93rem; }
+
+  /* ---- steps (a real sequence) ---- */
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(24px, 4vw, 48px); }
+  .step .n {
+    font-family: var(--serif);
+    font-size: 2.1rem;
+    line-height: 1;
+    color: var(--teal);
+    display: block;
+    margin-bottom: .5rem;
+  }
+  .step h3 { font-size: 1.05rem; font-weight: 600; margin: 0 0 .4rem; }
+  .step p { margin: 0; color: var(--ink-soft); font-size: .95rem; }
+
+  /* ---- privacy band ---- */
+  .privacy { background: var(--teal-soft); border-top: 1px solid var(--hair); border-bottom: 1px solid var(--hair); }
+  .privacy .wrap { padding-block: clamp(40px, 6vw, 64px); }
+  .privacy p { margin: 0; max-width: 66ch; }
+  .privacy .big {
+    font-size: 1.28rem; line-height: 1.45; color: var(--ink);
+    font-weight: 500; margin-bottom: .8rem;
+  }
+  .privacy .small { color: var(--teal-dark); font-size: .98rem; }
+
+  /* ---- get started ---- */
+  .start { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px, 5vw, 56px); align-items: start; }
+  .start p { color: var(--ink-soft); }
+  .start p.first { color: var(--ink); }
+  .stepbox {
+    background: var(--paper-2); border: 1px solid var(--hair);
+    border-radius: 12px; padding: 20px 22px;
+  }
+  .stepbox ol { margin: 0; padding-left: 1.2rem; }
+  .stepbox li { margin: 0 0 .55rem; }
+  .stepbox li:last-child { margin-bottom: 0; }
+  .stepbox code {
+    background: var(--teal-soft); color: var(--teal-dark);
+    padding: 1px 6px; border-radius: 5px; font-size: .88em;
+  }
+
+  /* ---- footer ---- */
+  footer { border-top: 1px solid var(--hair); }
+  footer .wrap { padding-block: 32px; display: flex; flex-wrap: wrap; gap: .6rem 1.4rem; justify-content: space-between; }
+  footer p { margin: 0; color: var(--ink-soft); font-size: .85rem; }
+  footer .disc { max-width: 52ch; }
+
+  /* ---- focus + motion ---- */
+  a:focus-visible, .btn:focus-visible {
+    outline: 2px solid var(--teal);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .dot.live { animation: none; opacity: 1; }
+    * { transition: none !important; }
+  }
+
+  /* ---- responsive ---- */
+  @media (max-width: 860px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero .panel { order: 2; }
+    .pillars { grid-template-columns: 1fr 1fr; }
+    .pillar { padding: 1.2rem 0; }
+    .pillar + .pillar { border-left: none; border-top: 1px solid var(--hair); }
+    .pillar:nth-child(2) { border-top: none; }
+  }
+  @media (max-width: 620px) {
+    .steps { grid-template-columns: 1fr; gap: 28px; }
+    .pillars { grid-template-columns: 1fr; }
+    .pillar:nth-child(2) { border-top: 1px solid var(--hair); }
+    .start { grid-template-columns: 1fr; }
+    .top nav a:first-child { display: none; }
+  }
+</style>
+</head>
+<body>
+
+  <header class="wrap">
+    <div class="top">
+      <a class="wordmark" href="#top">HushMemo <span class="sub">Meet</span></a>
+      <nav>
+        <a href="#how">How it works</a>
+        <a href="#start">Get started</a>
+        <a href="https://github.com/hushmemo/hushmemo-meet">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <div class="wrap">
+      <section class="hero">
+        <div>
+          <h1>Meeting notes that stay on your machine.</h1>
+          <p class="lead">
+            HushMemo listens to your call from the browser tab &mdash; no bot ever
+            joins the meeting &mdash; and turns the transcript and your own quick notes
+            into a clean summary. Everything is processed and stored on your own
+            computer.
+          </p>
+          <div class="hero-cta">
+            <a class="btn btn-primary" href="https://github.com/hushmemo/hushmemo-meet">Get it on GitHub</a>
+            <a class="btn btn-ghost" href="#how">See how it works</a>
+          </div>
+          <p class="hero-note">Open source, MIT-licensed. Works with Google Meet, Zoom and Microsoft Teams in the browser.</p>
+        </div>
+
+        <!-- The product itself is the hero image: the quiet notebook that listens. -->
+        <div class="panel" aria-hidden="true">
+          <div class="panel-context">
+            <span class="platform"><span class="dot small"></span> Google Meet</span>
+            <span>Weekly sync</span>
+          </div>
+          <div class="capture-bar">
+            <span class="dot live"></span> Listening
+            <span class="elapsed">07:32</span>
+          </div>
+          <div class="feed">
+            <p class="seg"><span class="t">07:05</span>…so we agreed to ship the beta before the end of the month.</p>
+            <p class="seg"><span class="t">07:19</span>Priya will own the migration; Sam is picking up the docs.</p>
+          </div>
+          <div class="jot">
+            <span class="chip">07:18</span>
+            <span>decision: beta ships this month &mdash; check hosting quota first</span>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <section>
+      <div class="wrap section-pad">
+        <h2>Why it's different</h2>
+        <p class="section-intro">Most note-takers send a bot into your call and a copy of your conversation to their servers. HushMemo does neither.</p>
+        <div class="pillars">
+          <div class="pillar">
+            <h3><span class="dot"></span> No bot in the call</h3>
+            <p>Nothing joins your meeting. HushMemo captures the tab's audio from your side, so no one sees a recording bot in the participant list.</p>
+          </div>
+          <div class="pillar">
+            <h3><span class="dot"></span> Local by default</h3>
+            <p>Audio, transcript and notes are processed and kept on your computer. No account to make, nothing uploaded.</p>
+          </div>
+          <div class="pillar">
+            <h3><span class="dot"></span> Your notes, your files</h3>
+            <p>Export any meeting as JSON, or delete it and it's gone. There is no server holding a second copy.</p>
+          </div>
+          <div class="pillar">
+            <h3><span class="dot"></span> Open and readable</h3>
+            <p>Plain JavaScript, no build step, MIT-licensed. Read every line and change whatever you like.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="how">
+      <div class="wrap section-pad">
+        <h2>How it works</h2>
+        <p class="section-intro">Three steps, from joining a call to a written record you can keep.</p>
+        <div class="steps">
+          <div class="step">
+            <span class="n">1</span>
+            <h3>Start listening</h3>
+            <p>Open the side panel on a Meet, Zoom or Teams tab and press Start. A quiet teal dot shows it's on, and the call keeps playing as normal.</p>
+          </div>
+          <div class="step">
+            <span class="n">2</span>
+            <h3>Jot as you go</h3>
+            <p>Type short notes during the call. Each one is timestamped against the transcript, so the context around it isn't lost.</p>
+          </div>
+          <div class="step">
+            <span class="n">3</span>
+            <h3>Get structured notes</h3>
+            <p>When you stop, HushMemo turns the transcript and your jottings into a summary with decisions, action items and open questions.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <section class="privacy">
+    <div class="wrap">
+      <p class="big">By default, HushMemo makes no network requests at all. Transcription and note-drafting run on your machine.</p>
+      <p class="small">If you choose to connect a local model like Ollama, or paste your own cloud API key, only then does anything leave your computer &mdash; and you set that up yourself.</p>
+    </div>
+  </section>
+
+  <section id="start">
+    <div class="wrap section-pad">
+      <h2>Get started</h2>
+      <div class="start">
+        <div>
+          <p class="first">It runs offline out of the box, with a built-in transcription stub and a no-model note generator, so you can try the whole flow the moment it's loaded.</p>
+          <p>When you want real speech-to-text, drop in Whisper (via transformers.js). For richer notes, point it at a local Ollama model or your own API key. The README walks through both, and neither is required to start.</p>
+        </div>
+        <div class="stepbox">
+          <ol>
+            <li>Download or clone the repository.</li>
+            <li>Open <code>chrome://extensions</code> and turn on Developer mode.</li>
+            <li>Click <code>Load unpacked</code> and select the <code>extension</code> folder.</li>
+            <li>Open a Meet, Zoom or Teams tab and click the HushMemo icon.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <p>MIT-licensed. &copy; 2026 The HushMemo Meet Authors.</p>
+      <p class="disc">Not affiliated with Google, Zoom or Microsoft. Google Meet, Zoom and Microsoft Teams are trademarks of their respective owners.</p>
+    </div>
+  </footer>
+
+</body>
+</html>
