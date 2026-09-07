@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>HushMemo Meet for the privacy-minded — a note-taker that makes no network requests</title>
+<meta name="description" content="No account, no telemetry, no phone-home. By default HushMemo opens no sockets; transcription runs locally, and you can draft notes with your own Ollama model." />
+<link rel="icon" type="image/svg+xml" href="../assets/logo-mark.svg" />
+<link rel="icon" type="image/png" href="../assets/favicon.png" />
+<link rel="stylesheet" href="../assets/styles.css" />
+</head>
+<body id="top">
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <symbol id="gh" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></symbol>
+  </svg>
+
+  <header class="wrap">
+    <div class="top">
+      <a class="brand" href="../index.html" aria-label="HushMemo Meet home">
+        <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect x="2" y="2" width="44" height="44" rx="12" fill="#2F7D6B"/>
+          <g transform="rotate(-5 24 24)">
+            <rect x="13" y="9" width="22" height="30" rx="3" fill="#FBFBFA"/>
+            <line x1="17" y1="17" x2="31" y2="17" stroke="#AEB8B2" stroke-width="2" stroke-linecap="round"/>
+            <line x1="17" y1="22" x2="31" y2="22" stroke="#AEB8B2" stroke-width="2" stroke-linecap="round"/>
+            <line x1="17" y1="27" x2="27" y2="27" stroke="#2F7D6B" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="31" cy="27" r="2.4" fill="#2F7D6B"/>
+          </g>
+        </svg>
+        <span class="name">HushMemo<span class="tag">Meet</span></span>
+      </a>
+      <nav>
+        <a class="hide-sm" href="../index.html">Full site</a>
+        <a class="gh-link" href="https://github.com/wushu75/Hushmemo" aria-label="HushMemo on GitHub"><svg class="gh-ico" fill="currentColor" aria-hidden="true"><use href="#gh"/></svg></a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero-section">
+      <div class="wrap hero">
+        <span class="eyebrow">For the privacy-minded</span>
+        <h1>A meeting note-taker that makes no network requests. None.</h1>
+        <p class="lead">No account, no telemetry, no phone-home. By default HushMemo never opens a socket &mdash; transcription and note-drafting run locally. Want AI-written notes without the cloud? Point it at your own Ollama model.</p>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="https://github.com/wushu75/Hushmemo"><svg class="gh-ico" fill="currentColor" aria-hidden="true"><use href="#gh"/></svg>Get it on GitHub</a>
+          <a class="btn btn-ghost" href="#why">See the reasons</a>
+        </div>
+        <p class="hero-meta">Free and open source. Works with Google Meet, Zoom and Microsoft Teams.</p>
+      </div>
+    </section>
+
+    <section id="why">
+      <div class="wrap section-pad">
+        <h2>Why local-first people actually keep this one installed</h2>
+        <div class="reasons">
+          <div class="reason"><span class="rn">1</span><div>
+            <h3>Zero network by default</h3>
+            <p>Open the network tab and watch: nothing. No analytics, no beacons, no &ldquo;anonymous usage stats&rdquo; quietly shipping out.</p>
+          </div></div>
+          <div class="reason"><span class="rn">2</span><div>
+            <h3>Local model, your hardware</h3>
+            <p>Generate structured notes with Ollama running on your own machine. The transcript never leaves localhost.</p>
+          </div></div>
+          <div class="reason"><span class="rn">3</span><div>
+            <h3>Your data, in your own store</h3>
+            <p>Everything lives in the browser&rsquo;s IndexedDB on your device. Export it as JSON, or delete it and it is actually gone.</p>
+          </div></div>
+          <div class="reason"><span class="rn">4</span><div>
+            <h3>It works in every meeting app</h3>
+            <p>Meet, Zoom, Teams &mdash; HushMemo captures the browser tab&rsquo;s audio, so it does not depend on any one platform&rsquo;s integration.</p>
+          </div></div>
+          <div class="reason"><span class="rn">5</span><div>
+            <h3>Structured notes and the full transcript</h3>
+            <p>You get a summary, decisions, action items with owners and open questions &mdash; plus the raw transcript. Export any meeting as JSON.</p>
+          </div></div>
+          <div class="reason"><span class="rn">6</span><div>
+            <h3>No account, nothing phones home</h3>
+            <p>Nothing to sign up for, no telemetry, no analytics. By default the extension makes no network requests at all.</p>
+          </div></div>
+          <div class="reason"><span class="rn">7</span><div>
+            <h3>Open source you can audit</h3>
+            <p>Plain JavaScript, no build step, MIT-licensed. Verify the privacy claims yourself, or fork it and make it your own.</p>
+          </div></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <section class="privacy">
+    <div class="wrap">
+      <p class="big">By default, HushMemo makes no network requests at all. Transcription and note-drafting run on your machine.</p>
+      <p class="small">Connect a local model like Ollama, or paste your own cloud API key, and only then does anything leave your computer &mdash; and you set that up yourself.</p>
+    </div>
+  </section>
+
+  <section id="get">
+    <div class="wrap section-pad">
+      <h2>Install it and check the network tab.</h2>
+      <p class="section-intro">See for yourself that nothing leaves the machine. Free, MIT-licensed, and readable end to end.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="https://github.com/wushu75/Hushmemo"><svg class="gh-ico" fill="currentColor" aria-hidden="true"><use href="#gh"/></svg>Get it on GitHub</a>
+        <a class="btn btn-ghost" href="../index.html#start">Setup takes two minutes</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <div>
+        <a class="brand" href="../index.html" aria-label="HushMemo Meet home">
+          <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" width="26" height="26" aria-hidden="true">
+          <rect x="2" y="2" width="44" height="44" rx="12" fill="#2F7D6B"/>
+          <g transform="rotate(-5 24 24)">
+            <rect x="13" y="9" width="22" height="30" rx="3" fill="#FBFBFA"/>
+            <line x1="17" y1="17" x2="31" y2="17" stroke="#AEB8B2" stroke-width="2" stroke-linecap="round"/>
+            <line x1="17" y1="22" x2="31" y2="22" stroke="#AEB8B2" stroke-width="2" stroke-linecap="round"/>
+            <line x1="17" y1="27" x2="27" y2="27" stroke="#2F7D6B" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="31" cy="27" r="2.4" fill="#2F7D6B"/>
+          </g>
+        </svg>
+          <span class="name">HushMemo<span class="tag">Meet</span></span>
+        </a>
+      </div>
+      <div>
+        <p class="foot-links">
+          <a href="https://github.com/wushu75/Hushmemo"><svg class="gh-ico" fill="currentColor" aria-hidden="true"><use href="#gh"/></svg>GitHub</a>
+          <a href="https://github.com/wushu75/Hushmemo/issues">Report an issue</a>
+        </p>
+        <p class="foot-note">Local-first. Cloud only when you turn it on. MIT-licensed.</p>
+        <p class="disc">Not affiliated with Google, Zoom or Microsoft. Google Meet, Zoom and Microsoft Teams are trademarks of their respective owners.</p>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
